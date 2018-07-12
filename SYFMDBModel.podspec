@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 s.name         = "SYFMDBModel"
 
 # 库的版本号，需要在对应版本分支上添加上对应版本的标签tag，标签不对在上传的时候会出问题
-s.version      = "0.0.1"
+s.version      = "0.0.2"
 
 # 库的概述，可在”pod search 库名”命令时看到
 s.summary      = "对FMDB进行扩展"
@@ -30,7 +30,7 @@ s.author             = { "gushengya" => "759705236@qq.com" }
 s.source       = { :git => "https://github.com/gushengya/SYFMDBModel.git", :tag => "#{s.version}" }
 
 # 项目主要文件(*表示匹配所有文件、*.h表示匹配所有.h文件、*.{h,m}表示匹配所有.h和.m文件、**表示匹配所有子目录)
-s.source_files  = "SYFMDBModel/*.{h,m}"
+s.source_files  = "SYFMDBModel/**/*.{h,m}"
 
 # 依赖的frameworks
 s.frameworks = 'UIKit'
