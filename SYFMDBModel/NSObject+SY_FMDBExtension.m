@@ -14,11 +14,8 @@
 #import "SY_Error.h"
 
 
-/// 本扩展模型的打印内容标志
-#define SY_LOG_SIGN_NAME @"SY_Error"
-
 #ifdef DEBUG
-#define SY_Error(xx, ...)  NSLog(@"[%@](%d行): " xx, SY_LOG_SIGN_NAME, __LINE__, ##__VA_ARGS__)
+#define SY_Error(xx, ...)  NSLog(@"[SY_Error](%d行): " xx, __LINE__, ##__VA_ARGS__)
 #define SY_Normal(xx, ...)  NSLog(@"[SYFMDBModel](%d行): " xx, __LINE__, ##__VA_ARGS__)
 #else
 #define SY_Log(xx, ...)
