@@ -6,6 +6,14 @@
 //  Copyright © 2018年 gushengya. All rights reserved.
 //
 
+#ifdef DEBUG
+#define SY_Error(xx, ...)  NSLog(@"[SY_Error](%d行): " xx, __LINE__, ##__VA_ARGS__)
+#define SY_Normal(xx, ...)  NSLog(@"[SYFMDBModel](%d行): " xx, __LINE__, ##__VA_ARGS__)
+#else
+#define SY_Log(xx, ...)
+#define SY_Normal(xx, ...)
+#endif
+
 /// 错误域名
 static NSString *const SY_DOMAIN_WRONGTYPE = @"SY_DOMAIN_WRONGTYPE"; // 类型不一致
 static NSString *const SY_DOMAIN_NONSUPPORTTYPE = @"SY_DOMAIN_NONSUPPORTTYPE"; // 不支持的类型

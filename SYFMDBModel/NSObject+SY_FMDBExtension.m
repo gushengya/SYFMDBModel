@@ -13,15 +13,6 @@
 #import <UIKit/UIKit.h>
 #import "SY_Error.h"
 
-
-#ifdef DEBUG
-#define SY_Error(xx, ...)  NSLog(@"[SY_Error](%d行): " xx, __LINE__, ##__VA_ARGS__)
-#define SY_Normal(xx, ...)  NSLog(@"[SYFMDBModel](%d行): " xx, __LINE__, ##__VA_ARGS__)
-#else
-#define SY_Log(xx, ...)
-#define SY_Normal(xx, ...)
-#endif
-
 /// 数据库中每个表的头结点值分割符: [嵌套父级类名+分隔符+所属属性名+分隔符+嵌套父级在数据库中的主键]组成头链
 #define SY_SING_HEADNODE @"_SY_"
 
@@ -552,7 +543,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     BOOL isSuccess = [db executeUpdate:sqlString withArgumentsInArray:values];
     if (isSuccess)
     {
-        NSInteger pkID = db.lastInsertRowId;
+        long pkID = db.lastInsertRowId;
         
         for (NSString *key in nestdic.allKeys)
         {
@@ -843,7 +834,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                 }
                 
                 // 假如数据库中该子嵌套存在, 则肯定可以得到其主键值
-                NSInteger pk = [oldList.firstObject sy_PrimaryKeyValue];
+                long pk = [oldList.firstObject sy_PrimaryKeyValue];
                 [value sy_SetPrimaryKeyValue:pk];
                 
                 if (![value sy_UpdateWithDatabase:db rollback:rollback error:error]) return NO;
@@ -913,7 +904,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                     *rollback = YES; return NO;
                 }
                 
-                NSInteger tmpCount = [value count];
+                long tmpCount = [value count];
                 if (oldList.count > tmpCount)
                 {
                     for (int i = 0; i < oldList.count; i++) {
@@ -929,7 +920,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                         
                         // 数据库中对应索引数据更新为该赋值数据
                         if (i < tmpCount) {
-                            NSInteger pk = [oldList[i] sy_PrimaryKeyValue];
+                            long pk = [oldList[i] sy_PrimaryKeyValue];
                             [value[i] sy_SetPrimaryKeyValue:pk];
                             if (![value[i] sy_UpdateWithDatabase:db rollback:rollback error:error]) return NO;
                         }
@@ -956,7 +947,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                         
                         // 数据库中对应索引数据更新为该赋值数据
                         if (i < oldList.count) {
-                            NSInteger pk = [oldList[i] sy_PrimaryKeyValue];
+                            long pk = [oldList[i] sy_PrimaryKeyValue];
                             [value[i] sy_SetPrimaryKeyValue:pk];
                             if (![value[i] sy_UpdateWithDatabase:db rollback:rollback error:error]) return NO;
                         }
@@ -988,7 +979,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
 /// 只能是嵌套上级调用并传入其相关属性名来组合成头链的值
 - (NSString *)sy_GetHeadNodeWithPropertyName:(NSString *)name
 {
-    NSInteger pk = [self sy_PrimaryKeyValue];
+    long pk = [self sy_PrimaryKeyValue];
     NSString *tmp = [NSString stringWithFormat:@"%@%@%@%@%ld", NSStringFromClass(self.class), SY_SING_HEADNODE, name, SY_SING_HEADNODE, pk];
     return tmp;
 }
@@ -1058,7 +1049,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
         
         id model = [[self alloc] init];
         
-        NSInteger pk = [[dic valueForKey:SY_COLUMNNAME_KEYWORD] integerValue];
+        long pk = [[dic valueForKey:SY_COLUMNNAME_KEYWORD] longValue];
         [model sy_SetPrimaryKeyValue:pk];
         NSString *superiorKey = [dic valueForKey:SY_COLUMNNAME_HEADNODE];
         [model sy_SetSuperiorKeyValue:superiorKey];
@@ -1137,7 +1128,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             
             NSString *tableName = NSStringFromClass(self);
             NSString *propertyName = p.name;
-            NSInteger dataID = [model sy_PrimaryKeyValue];
+            long dataID = [model sy_PrimaryKeyValue];
             
             NSString *sql = [NSString stringWithFormat:@"where %@ = '%@'", SY_COLUMNNAME_HEADNODE, [NSString stringWithFormat:@"%@%@%@%@%ld", tableName, SY_SING_HEADNODE, propertyName, SY_SING_HEADNODE, dataID]];
             
@@ -1301,14 +1292,14 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
 }
 
 #pragma mark- <-----------  关联属性  ----------->
-- (void)sy_SetPrimaryKeyValue:(NSInteger)pk
+- (void)sy_SetPrimaryKeyValue:(long)pk
 {
     objc_setAssociatedObject(self, &SY_ASSOCIATED_PRIMARYKEY, [NSNumber numberWithInteger:pk], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSInteger)sy_PrimaryKeyValue
+- (long)sy_PrimaryKeyValue
 {
-    return [objc_getAssociatedObject(self, &SY_ASSOCIATED_PRIMARYKEY) integerValue];
+    return [objc_getAssociatedObject(self, &SY_ASSOCIATED_PRIMARYKEY) longValue];
 }
 
 - (void)sy_SetSuperiorKeyValue:(NSString *)newValue
