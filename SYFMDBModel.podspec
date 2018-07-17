@@ -27,7 +27,7 @@ s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.author             = { "gushengya" => "759705236@qq.com" }
 
 # 项目源代码位置一般就是一个github地址(:commit => "686868" 表示将这个Pod版本与Git仓库中某个commit绑定、:tag => 1.0.0表示与某个版本的commit绑定)
-s.source       = { :git => "https://github.com/gushengya/SYFMDBModel.git", :commit => "d55c73f" }
+s.source       = { :git => "https://github.com/gushengya/SYFMDBModel.git", :commit => "ea35936" }
 
 # 项目主要文件(*表示匹配所有文件、*.h表示匹配所有.h文件、*.{h,m}表示匹配所有.h和.m文件、**表示匹配所有子目录)
 s.source_files  = "SYFMDBModel/**/*.{h,m}"

@@ -7,8 +7,6 @@
 //
 
 #import "SY_FMDBManager.h"
-#import <UIKit/UIKit.h>
-#import <sys/xattr.h>
 @interface SY_FMDBManager()
 
 /// 数据库队列
@@ -36,7 +34,6 @@
 {
     if (!_databaseQueue) {
         _databaseQueue = [FMDatabaseQueue databaseQueueWithPath:self.dbFilePath];
-        [self addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:self.dbFilePath]];
     }
     
     return _databaseQueue;
@@ -67,25 +64,5 @@
     return dbpath;
 }
 
-- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)url
-{
-    double version = [[[UIDevice currentDevice] systemVersion] doubleValue];
-    if (version >= 5.1f) {
-        NSError *error = nil;
-        BOOL success = [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
-        if (!success) {
-            NSLog(@"[SYMFDBModel]未成功屏蔽上传iCloud, 路径为:(%@), 原因:(%@)",url.lastPathComponent, error.localizedDescription);
-        }
-        
-        return success;
-    }
-    
-    const char* filePath = [[url path] fileSystemRepresentation];
-    const char* attrName = "com.apple.MobileBackup";
-    u_int8_t attrValue = 1;
-    int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
-    
-    return result == 0;
-}
 
 @end
