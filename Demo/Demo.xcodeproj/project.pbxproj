@@ -16,6 +16,7 @@
 		5437B3CA20F6F8CB00952CDD /* SY_Property.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C420F6F8CA00952CDD /* SY_Property.m */; };
 		5437B3CB20F6F8CB00952CDD /* SY_FMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C520F6F8CA00952CDD /* SY_FMDBManager.m */; };
 		5437B3CC20F6F8CB00952CDD /* NSObject+SY_FMDBExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C620F6F8CA00952CDD /* NSObject+SY_FMDBExtension.m */; };
+		544B4D0720FD9DF10071FC1E /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 544B4D0620FD9DF10071FC1E /* Person.m */; };
 		D1A0058A52AD43DF9D80F693 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D25F521BDF2ED445C97D7AA /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,9 @@
 		5437B3C720F6F8CA00952CDD /* SY_Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SY_Property.h; sourceTree = "<group>"; };
 		5437B3C820F6F8CA00952CDD /* NSObject+SY_FMDBExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SY_FMDBExtension.h"; sourceTree = "<group>"; };
 		5437B3C920F6F8CA00952CDD /* SY_FMDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SY_FMDBManager.h; sourceTree = "<group>"; };
+		544B4D0520FD9DF10071FC1E /* Person.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		544B4D0620FD9DF10071FC1E /* Person.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		544B4D0820FDC1920071FC1E /* SY_Error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SY_Error.h; sourceTree = "<group>"; };
 		7A7A4203E176811214ED7C21 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		EBC17E997865C7115FB28A20 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +83,8 @@
 				5437B3AE20F6F89E00952CDD /* AppDelegate.m */,
 				5437B3B020F6F89E00952CDD /* ViewController.h */,
 				5437B3B120F6F89E00952CDD /* ViewController.m */,
+				544B4D0520FD9DF10071FC1E /* Person.h */,
+				544B4D0620FD9DF10071FC1E /* Person.m */,
 				5437B3B320F6F89E00952CDD /* Main.storyboard */,
 				5437B3B620F6F89F00952CDD /* Assets.xcassets */,
 				5437B3B820F6F89F00952CDD /* LaunchScreen.storyboard */,
@@ -97,6 +103,7 @@
 				5437B3C520F6F8CA00952CDD /* SY_FMDBManager.m */,
 				5437B3C720F6F8CA00952CDD /* SY_Property.h */,
 				5437B3C420F6F8CA00952CDD /* SY_Property.m */,
+				544B4D0820FDC1920071FC1E /* SY_Error.h */,
 			);
 			name = SYFMDBModel;
 			path = ../../SYFMDBModel;
@@ -232,6 +239,7 @@
 			files = (
 				5437B3CC20F6F8CB00952CDD /* NSObject+SY_FMDBExtension.m in Sources */,
 				5437B3CA20F6F8CB00952CDD /* SY_Property.m in Sources */,
+				544B4D0720FD9DF10071FC1E /* Person.m in Sources */,
 				5437B3B220F6F89E00952CDD /* ViewController.m in Sources */,
 				5437B3BD20F6F89F00952CDD /* main.m in Sources */,
 				5437B3AF20F6F89E00952CDD /* AppDelegate.m in Sources */,

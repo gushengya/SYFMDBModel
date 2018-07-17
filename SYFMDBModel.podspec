@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 s.name         = "SYFMDBModel"
 
 # 库的版本号，需要在对应版本分支上添加上对应版本的标签tag，标签不对在上传的时候会出问题
-s.version      = "0.0.2"
+s.version      = "0.0.3"
 
 # 库的概述，可在”pod search 库名”命令时看到
 s.summary      = "对FMDB进行扩展"
@@ -36,7 +36,7 @@ s.source_files  = "SYFMDBModel/**/*.{h,m}"
 s.frameworks = 'UIKit'
 
 # 依赖的lib
-s.libraries    = 'objc'
+s.libraries    = 'objc', 'sys'
 
 # 依赖第三方pod库 -- 格式为: s.dependency '第三方库名', '版本号'，如有多个以逗号,隔开
 s.dependency 'FMDB', '2.7.2'
