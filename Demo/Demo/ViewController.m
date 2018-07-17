@@ -176,7 +176,7 @@
     for (First *first in arr) {
         first.stringValue = @"谷胜亚";
         first.secondNest = second;
-        first.secondListNest = @[@""];
+        first.secondListNest = nil;
         BOOL result = [first sy_UpdateWithError:&error];
         NSLog(@"%d", result);
     }

@@ -69,7 +69,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
 
         BOOL isExist = [db tableExists:NSStringFromClass(self)];
         if (isExist) {
-            SY_Normal(@"%@表已存在无需创建", NSStringFromClass([self class]));
+            NSLog(@"[SY_Error]%@表已存在无需创建", NSStringFromClass([self class]));
         }else {
             // 按SQL语句格式拼接属性组成的字符串
             NSString *propertySQLString = [self sy_SplicingSqlString];
@@ -88,11 +88,11 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             BOOL isSuccess = [db executeUpdate:sql];
             
             if (isSuccess == NO) {
-                SY_Error(@"%@表创建失败语句为:(%@)", NSStringFromClass(self), sql);
+                NSLog(@"[SY_Error]%@表创建失败语句为:(%@)", NSStringFromClass(self), sql);
                 *rollback = YES; return;
             }
             
-            SY_Normal(@"%@表创建成功语句为:(%@)", NSStringFromClass(self), sql);
+            NSLog(@"[SYFMDBModel]%@表创建成功语句为:(%@)", NSStringFromClass(self), sql);
         }
         
         // 3. 表已存在的情况下, 判断是否需要更新表内容
@@ -122,11 +122,11 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                 BOOL success = [db executeUpdate:sqlString];
                 if (success)
                 {
-                    SY_Normal(@"%@表增加字段成功语句为:(%@)", NSStringFromClass(self), sqlString);
+                    NSLog(@"[SYFMDBModel]%@表增加字段成功语句为:(%@)", NSStringFromClass(self), sqlString);
                 }
                 else
                 {
-                    SY_Error(@"%@表增加字段失败语句为:(%@)", NSStringFromClass(self), sqlString);
+                    NSLog(@"[SY_Error]%@表增加字段失败语句为:(%@)", NSStringFromClass(self), sqlString);
                     *rollback = YES; return;
                 }
             }
@@ -269,13 +269,13 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                     if (nestClass) {
                         des.associateClass = nestClass;
                     }else {
-                        SY_Error(@"%@类对应的属性%@其类型%@不是OC类型", NSStringFromClass(class), des.name, className);
+                        NSLog(@"[SY_Error]%@类对应的属性%@其类型%@不是OC类型", NSStringFromClass(class), des.name, className);
                         NSAssert(NO, @"");
                     }
                 }
                 else
                 {
-                    SY_Error(@"%@类对应的属性%@其类型不是OC类型", NSStringFromClass(class), des.name);
+                    NSLog(@"[SY_Error]%@类对应的属性%@其类型不是OC类型", NSStringFromClass(class), des.name);
                     NSAssert(NO, @"");
                 }
             }
@@ -465,7 +465,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                 {
                     if (![value isKindOfClass:[NSDate class]]) {
                         NSString *key = [NSString stringWithFormat:@"(insert)%@类的%@非嵌套属性类型为%@但KVC取值得到类型为%@", NSStringFromClass([self class]), p.name, NSStringFromClass(p.ocType), NSStringFromClass([value class])];
-                        SY_Error(@"%@", key);
+                        NSLog(@"[SY_Error]%@", key);
                         if (error) {
                             *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE
                                                          code:SY_ERRORTYPE_INSERT_NO1
@@ -560,7 +560,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                 if (![value isKindOfClass:[NSArray class]])
                 {
                     NSString *logKey = [NSString stringWithFormat:@"(insert)%@类的%@嵌套属性类型为%@但KVC取值得到类型为%@", NSStringFromClass([self class]), p.name, NSStringFromClass(p.ocType), NSStringFromClass([value class])];
-                    SY_Error(@"%@", logKey);
+                    NSLog(@"[SY_Error]%@", logKey);
                     if (error) {
                         *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE
                                                      code:SY_ERRORTYPE_INSERT_NO2
@@ -580,7 +580,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                     else
                     {
                         NSString *logKey = [NSString stringWithFormat:@"(insert)%@类的%@嵌套集合属性声明嵌套类为%@但KVC取值得到其子值类型为%@", NSStringFromClass([self class]), p.name, NSStringFromClass(p.associateClass), NSStringFromClass([subValue class])];
-                        SY_Error(@"%@", logKey);
+                        NSLog(@"[SY_Error]%@", logKey);
                         if (error) {
                             *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE
                                                          code:SY_ERRORTYPE_INSERT_NO3
@@ -595,7 +595,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                 if (![value isKindOfClass:p.ocType])
                 {
                     NSString *logKey = [NSString stringWithFormat:@"(insert)%@类的%@嵌套属性类型为%@但KVC取值得到类型为%@", NSStringFromClass([self class]), p.name, NSStringFromClass(p.ocType), NSStringFromClass([value class])];
-                    SY_Error(@"%@", logKey);
+                    NSLog(@"[SY_Error]%@", logKey);
                     if (error) {
                         *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE
                                                      code:SY_ERRORTYPE_INSERT_NO2
@@ -610,7 +610,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             else // 其他
             {
                 NSString *logKey = [NSString stringWithFormat:@"(insert)%@类的%@嵌套属性暂不支持数据库持久化", NSStringFromClass([self class]), p.name];
-                SY_Error(@"%@", logKey);
+                NSLog(@"[SY_Error]%@", logKey);
                 if (error) {
                     *error = [NSError errorWithDomain:SY_DOMAIN_NONSUPPORTTYPE
                                                  code:SY_ERRORTYPE_INSERT_NO4
@@ -623,7 +623,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     else
     {
         NSString *logKey = [NSString stringWithFormat:@"(insert)%@类的非嵌套部分插入数据失败:(%@)", NSStringFromClass([self class]), sqlString];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE
                                          code:SY_ERRORTYPE_INSERT_NO5
@@ -643,7 +643,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     
     if ([self sy_PrimaryKeyValue] <= 0) {
         NSString *logKey = [NSString stringWithFormat:@"(update)执行更新操作的模型不存在主键"];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE code:SY_ERRORTYPE_UPDATE_NO1 userInfo:@{NSLocalizedDescriptionKey: logKey}];
         }
@@ -725,7 +725,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
         {
             if (![value isKindOfClass:[NSDate class]]) {
                 NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与KVC取出的值的类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
-                SY_Error(@"%@", logKey);
+                NSLog(@"[SY_Error]%@", logKey);
                 if (error) {
                     *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO2 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                 }
@@ -791,7 +791,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     BOOL isSuccess = [db executeUpdate:sql withArgumentsInArray:valueList];
     if (!isSuccess) {
         NSString *logKey = [NSString stringWithFormat:@"(update)类%@执行更新语句失败", NSStringFromClass([self class])];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE code:SY_ERRORTYPE_UPDATE_NO3 userInfo:@{NSLocalizedDescriptionKey: logKey}];
         }
@@ -826,7 +826,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             {
                 if (![value isKindOfClass:p.associateClass]) {
                     NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与从KVC取值得到的值类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
-                    SY_Error(@"%@", logKey);
+                    NSLog(@"[SY_Error]%@", logKey);
                     if (error) {
                         *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO4 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                     }
@@ -849,7 +849,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             {
                 if (![value isKindOfClass:p.associateClass]) {
                     NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与从KVC取值得到的值类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
-                    SY_Error(@"%@", logKey);
+                    NSLog(@"[SY_Error]%@", logKey);
                     if (error) {
                         *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO4 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                     }
@@ -874,7 +874,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             {
                 if (![value isKindOfClass:[NSArray class]]) {
                     NSString *logKey = [NSString stringWithFormat:@"(update)%@类的嵌套属性%@其类型%@与从KVC取值得到的值类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
-                    SY_Error(@"%@", logKey);
+                    NSLog(@"[SY_Error]%@", logKey);
                     if (error) {
                         *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO5 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                     }
@@ -897,7 +897,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
             {
                 if (![value isKindOfClass:[NSArray class]]) {
                     NSString *logKey = [NSString stringWithFormat:@"(update)%@类的嵌套属性%@其类型%@与从KVC取值得到的值类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
-                    SY_Error(@"%@", logKey);
+                    NSLog(@"[SY_Error]%@", logKey);
                     if (error) {
                         *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO5 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                     }
@@ -911,7 +911,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                         
                         if (![value[i] isKindOfClass:p.associateClass]) {
                             NSString *logKey = [NSString stringWithFormat:@"(update)%@类的嵌套属性%@其声明的嵌套类型%@与从KVC取值得到的其子值类型%@不一致", NSStringFromClass([self class]), p.name, p.associateClass, NSStringFromClass([value[i] class])];
-                            SY_Error(@"%@", logKey);
+                            NSLog(@"[SY_Error]%@", logKey);
                             if (error) {
                                 *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO6 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                             }
@@ -938,7 +938,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
                         
                         if (![value[i] isKindOfClass:p.associateClass]) {
                             NSString *logKey = [NSString stringWithFormat:@"(update)%@类的嵌套属性%@其声明的嵌套类型%@与从KVC取值得到的其子值类型%@不一致", NSStringFromClass([self class]), p.name, p.associateClass, NSStringFromClass([value[i] class])];
-                            SY_Error(@"%@", logKey);
+                            NSLog(@"[SY_Error]%@", logKey);
                             if (error) {
                                 *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO6 userInfo:@{NSLocalizedDescriptionKey: logKey}];
                             }
@@ -1025,7 +1025,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     if (resultSet == nil)
     {
         NSString *logKey = [NSString stringWithFormat:@"(select)查询语句发生错误:(%@)", sql];
-        SY_Error("%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE
                                          code:SY_ERRORTYPE_SELECT_NO1
@@ -1196,7 +1196,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     // 1. 判断数据库中是否存在该条数据
     if ([self sy_PrimaryKeyValue] <= 0) {
         NSString *logKey = [NSString stringWithFormat:@"(delete)%@类的实例对象不存在主键值", NSStringFromClass([self class])];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_DELETE_NO1 userInfo:@{NSLocalizedDescriptionKey: logKey}];
         }
@@ -1217,7 +1217,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     if ([self sy_PrimaryKeyValue] <= 0)
     {
         NSString *logKey = [NSString stringWithFormat:@"(delete)%@类的实例对象不存在主键值", NSStringFromClass([self class])];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_DELETE_NO1 userInfo:@{NSLocalizedDescriptionKey: logKey}];
         }
@@ -1262,7 +1262,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     BOOL isSuccess = [db executeUpdate:sql];
     if (isSuccess == NO) {
         NSString *logKey = [NSString stringWithFormat:@"(delete)%@类的实例对象执行删除语句失败", NSStringFromClass([self class])];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE code:SY_ERRORTYPE_DELETE_NO2 userInfo:@{NSLocalizedDescriptionKey:logKey}];
         }
@@ -1277,7 +1277,7 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
 {
     if (![self isKindOfClass:[NSArray class]]) {
         NSString *logKey = [NSString stringWithFormat:@"(delete)调用者类型不是数组:%@", NSStringFromClass([self class])];
-        SY_Error(@"%@", logKey);
+        NSLog(@"[SY_Error]%@", logKey);
         if (error) {
             *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_DELETE_NO3 userInfo:@{NSLocalizedDescriptionKey:logKey}];
         }
