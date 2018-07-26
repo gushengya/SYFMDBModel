@@ -19,8 +19,15 @@
     
 //        [self add];
 //    [self remove];
-        [self update];
+//        [self update];
 //        [self select];
+    
+    BOOL result = [Third sy_UpdateName:@"dateValue" newValue:nil condition:@"" error:nil];
+    
+    NSArray *array = [Third sy_FindName:@"dateValue" condition:@"" error:nil];
+    for (NSValue *value in array) {
+        NSLog(@"(1)%@", value);
+    }
 }
 
 
@@ -46,7 +53,7 @@
     third.mutablearrayValue = @[@"11", @"22", @"33"].mutableCopy;
     third.numberValue = @(1);
     third.dateValue = [NSDate date];
-    third.dataValue = [NSData data];
+    third.dataValue = UIImagePNGRepresentation([UIImage imageNamed:@"8E7D412BF9A31BB59D6F6C7E92360220"]);
     
     third.thirdNest = nil;
     third.thirdListNest = nil;

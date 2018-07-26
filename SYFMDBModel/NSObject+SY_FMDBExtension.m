@@ -543,13 +543,13 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     BOOL isSuccess = [db executeUpdate:sqlString withArgumentsInArray:values];
     if (isSuccess)
     {
-        long pkID = db.lastInsertRowId;
+        int64_t pkID = db.lastInsertRowId;
         
         for (NSString *key in nestdic.allKeys)
         {
             SY_Property *p = nestdic[key];
             
-            NSString *associatedColumnValue = [NSString stringWithFormat:@"%@%@%@%@%ld", NSStringFromClass(self.class), SY_SING_HEADNODE, p.name, SY_SING_HEADNODE, pkID];
+            NSString *associatedColumnValue = [NSString stringWithFormat:@"%@%@%@%@%lld", NSStringFromClass(self.class), SY_SING_HEADNODE, p.name, SY_SING_HEADNODE, pkID];
             
             id value = [self valueForKey:p.name];
             
@@ -658,7 +658,179 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     return result;
 }
 
-
+// UPDATE Person SET FirstName = 'Fred' WHERE LastName = 'Wilson'
++ (BOOL)sy_UpdateName:(NSString *)name newValue:(id)value condition:(NSString *)condition error:(NSError *__autoreleasing*)error
+{
+    [self.class sy_ConfigProperties];
+    
+    NSDictionary *unNestPart = objc_getAssociatedObject([self class], &SY_ASSOCIATED_SAVEPROPERTY);
+    SY_Property *p = unNestPart[name];
+    if (!p) return NO;
+    
+    NSMutableString *columnString = [NSMutableString string];
+    NSMutableArray *valueList = [NSMutableArray array];
+    
+    // 基础数据类型且传入nil值
+    if (p.unObjectCType == SYNotObjectCType_BaseData && (value == nil || [value isKindOfClass:[NSNull class]]))
+    {
+        [columnString appendFormat:@"%@=?", p.name];
+        [valueList addObject:@0];
+    }
+    // 结构体且传入nil值
+    else if (p.unObjectCType == SYNotObjectCType_Stuct && (value == nil || [value isKindOfClass:[NSNull class]]))
+    {
+        [columnString appendFormat:@"%@=?", p.name];
+        if ([p.stuctName isEqualToString:@"CGPoint"]) // CGPoint
+        {
+            CGPoint point = CGPointZero;
+            [valueList addObject:NSStringFromCGPoint(point)];
+        }
+        else if ([p.stuctName isEqualToString:@"CGSize"]) // CGSize
+        {
+            CGSize size = CGSizeZero;
+            [valueList addObject:NSStringFromCGSize(size)];
+        }
+        else if ([p.stuctName isEqualToString:@"CGRect"]) // CGRect
+        {
+            CGRect rect = CGRectZero;
+            [valueList addObject:NSStringFromCGRect(rect)];
+        }
+        else
+        {
+            
+        }
+    }
+    // 空值
+    else if (value == nil || [value isKindOfClass:[NSNull class]])
+    {
+        [columnString appendFormat:@"%@=null", p.name];
+    }
+    // 其他
+    else
+    {
+        [columnString appendFormat:@"%@=?", p.name];
+        if ([p.ocType isSubclassOfClass:[NSArray class]] || [p.ocType isSubclassOfClass:[NSDictionary class]]) // 集合类
+        {
+            if (!([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]])) {
+                NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与取出的值的类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
+                NSLog(@"[SY_Error]%@", logKey);
+                if (error) {
+                    *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO2 userInfo:@{NSLocalizedDescriptionKey: logKey}];
+                }
+                return NO;
+            }
+            
+            NSError *error = nil; NSData *data = nil;
+            @try {
+                // OC对象JSON序列化
+                data = [NSJSONSerialization dataWithJSONObject:value options:NSJSONWritingPrettyPrinted error:&error];
+                if (!error) {
+                    NSString *jsonStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                    [valueList addObject:jsonStr];
+                }else {
+                    [valueList addObject:value];
+                }
+            }
+            @catch (NSException *e) {
+                [valueList addObject:value];
+            }
+        }
+        else if ([p.ocType isSubclassOfClass:[NSDate class]]) // NSDate类型可保存为浮点型时间戳
+        {
+            if (![value isKindOfClass:[NSDate class]]) {
+                NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与取出的值的类型%@不一致", NSStringFromClass([self class]), p.name, p.ocType, NSStringFromClass([value class])];
+                NSLog(@"[SY_Error]%@", logKey);
+                if (error) {
+                    *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO2 userInfo:@{NSLocalizedDescriptionKey: logKey}];
+                }
+                return NO;
+            }
+            
+            NSTimeInterval interval = [value timeIntervalSince1970];
+            
+            [valueList addObject:[NSNumber numberWithDouble:interval]];
+        }
+        else if (p.unObjectCType == SYNotObjectCType_Stuct && p.stuctName)
+        {
+            if (!([value isKindOfClass:[NSValue class]] && ![value isKindOfClass:[NSNumber class]])) {
+                NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与取出的值的类型%@不一致", NSStringFromClass([self class]), p.name, p.stuctName, NSStringFromClass([value class])];
+                NSLog(@"[SY_Error]%@", logKey);
+                if (error) {
+                    *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO2 userInfo:@{NSLocalizedDescriptionKey: logKey}];
+                }
+                return NO;
+            }
+            
+            if ([p.stuctName isEqualToString:@"CGPoint"]) // CGPoint
+            {
+                CGPoint point = CGPointZero;
+                @try {
+                    point = [value CGPointValue];  // CGPoint等结构体在使用KVC获取的时候自动打包成NSValue值, 需使用NSValue类对应实例方法取得原值
+                }@catch (NSException *e) {
+                    
+                }
+                
+                [valueList addObject:NSStringFromCGPoint(point)];
+            }
+            else if ([p.stuctName isEqualToString:@"CGSize"]) // CGSize
+            {
+                CGSize size = CGSizeZero;
+                @try {
+                    size = [value CGSizeValue];
+                }@catch (NSException *e) {
+                    
+                }
+                
+                [valueList addObject:NSStringFromCGSize(size)];
+            }
+            else if ([p.stuctName isEqualToString:@"CGRect"]) // CGRect
+            {
+                CGRect rect = CGRectZero;
+                @try {
+                    rect = [value CGRectValue];
+                }@catch (NSException *e) {
+                    
+                }
+                
+                [valueList addObject:NSStringFromCGRect(rect)];
+            }
+            else
+            {
+                return NO;
+            }
+        }
+        else
+        {
+            if (![value isKindOfClass:p.ocType]) {
+                NSString *logKey = [NSString stringWithFormat:@"(update)%@类的属性%@其类型%@与取出的值的类型%@不一致", NSStringFromClass(self), p.name, p.ocType, NSStringFromClass([value class])];
+                NSLog(@"[SY_Error]%@", logKey);
+                if (error) {
+                    *error = [NSError errorWithDomain:SY_DOMAIN_WRONGTYPE code:SY_ERRORTYPE_UPDATE_NO2 userInfo:@{NSLocalizedDescriptionKey: logKey}];
+                }
+                return NO;
+            }
+            [valueList addObject:value];
+        }
+    }
+    
+    NSString *sql = [NSString stringWithFormat:@"UPDATE %@ SET %@ %@", NSStringFromClass(self), columnString, condition];
+    
+    __block BOOL result = YES;
+    
+    [[SY_FMDBManager manager].databaseQueue inTransaction:^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) {
+        result = [db executeUpdate:sql withArgumentsInArray:valueList];
+        if (!result) {
+            NSString *logKey = [NSString stringWithFormat:@"(update)类%@执行更新语句失败", NSStringFromClass([self class])];
+            NSLog(@"[SY_Error]%@", logKey);
+            if (error) {
+                *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE code:SY_ERRORTYPE_UPDATE_NO3 userInfo:@{NSLocalizedDescriptionKey: logKey}];
+            }
+            *rollback = YES;
+        }
+    }];
+    
+    return result;
+}
 
 /// 将一个对象的内容赋给另一个同级对象 -- 将调用者的数据更新成参数传入的数据
 /**
@@ -1007,6 +1179,123 @@ static NSString *const SY_COLUMNNAME_KEYWORD = @"SY_COLUMNNAME_KEYWORD";
     return array;
 }
 
++ (NSArray *)sy_FindName:(NSString *)name condition:(NSString *)condition error:(NSError * __autoreleasing *)error;
+{
+    [self sy_ConfigProperties];
+    
+    __block NSArray *array = nil;
+    if (!name || [name isKindOfClass:[NSNull class]]) {
+        [[SY_FMDBManager manager].databaseQueue inDatabase:^(FMDatabase * _Nonnull db) {
+            array = [self sy_SearchByCondition:condition inDatabase:db error:error];
+        }];
+    }else {
+        condition = (condition && ![condition isKindOfClass:[NSNull class]]) ? condition : @"";
+        [[SY_FMDBManager manager].databaseQueue inDatabase:^(FMDatabase * _Nonnull db) {
+            array = [self sy_selectName:name condition:condition inDatabase:db error:error];
+        }];
+    }
+    
+    return array;
+}
+
++ (NSArray *)sy_selectName:(NSString *)name condition:(NSString *)condition inDatabase:(FMDatabase *)db error:(NSError **)error
+{
+    NSString *sql = [NSString stringWithFormat:@"select %@ from %@ %@", name, NSStringFromClass(self), condition];
+    FMResultSet *resultSet = [db executeQuery:sql];
+    
+    // 1. 表示查询出错
+    if (resultSet == nil)
+    {
+        NSString *logKey = [NSString stringWithFormat:@"(select)查询语句发生错误:(%@)", sql];
+        NSLog(@"[SY_Error]%@", logKey);
+        if (error) {
+            *error = [NSError errorWithDomain:SY_DOMAIN_FAILEDEXECUTE
+                                         code:SY_ERRORTYPE_SELECT_NO1
+                                     userInfo:@{NSLocalizedDescriptionKey:logKey}];
+        }
+        return nil;
+    }
+    
+    NSDictionary *storeDic = objc_getAssociatedObject(self, &SY_ASSOCIATED_SAVEPROPERTY);
+    SY_Property *p = storeDic[name];
+    if (p == nil) return nil;
+    
+    // 2.1 初始化一个可变数组保存转变完的模型
+    NSMutableArray *resultList = [NSMutableArray array];
+    
+    // 3. 遍历结果集(结果集中是一条条数据[数据中不包含嵌套的属性])
+    while ([resultSet next]) // 当结果集中仍然有下一条数据时进入循环
+    {
+        NSDictionary *dic = [resultSet resultDictionary];
+        id value = dic[name];
+        
+        if (p.ocType != nil && ![p.ocType isSubclassOfClass:[NSNull class]]) // OC对象
+        {
+            if (value == nil || [value isKindOfClass:[NSNull class]]) continue;
+            if ([p.ocType isSubclassOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) // 字符串类型
+            {
+                [resultList addObject:value];
+            }
+            else if ([p.ocType isSubclassOfClass:[NSNumber class]] && [value isKindOfClass:[NSNumber class]]) // NSNumber类型
+            {
+                [resultList addObject:value];
+            }
+            else if ([p.ocType isSubclassOfClass:[NSArray class]]) // 数组或字典
+            {
+                NSData *valueData = [value dataUsingEncoding:NSUTF8StringEncoding];
+                NSError *error = nil;
+                id objc = [NSJSONSerialization JSONObjectWithData:valueData options:kNilOptions error:&error];
+                if (error) {
+                    NSLog(@"反序列化失败");
+                    continue;
+                }
+                [resultList addObject:objc];
+            }
+            else if ([p.ocType isSubclassOfClass:[NSDate class]]) // NSDate类型
+            {
+                NSNumber *number = [dic valueForKey:p.name];
+                // 根据时间戳获取NSDate对象
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:number.doubleValue];
+                [resultList addObject:date];
+            }
+            else // 其他
+            {
+                [resultList addObject:value];
+            }
+        }
+        else if (p.unObjectCType == SYNotObjectCType_Stuct && p.stuctName) // 结构体
+        {
+            if ([p.stuctName isEqualToString:@"CGPoint"]) // CGPoint
+            {
+                CGPoint point = CGPointFromString(value);
+                NSValue *nsValue = [NSValue valueWithCGPoint:point];
+                [resultList addObject:nsValue];
+            }
+            else if ([p.stuctName isEqualToString:@"CGSize"]) // CGSize
+            {
+                CGSize size = CGSizeFromString(value);
+                NSValue *nsValue = [NSValue valueWithCGSize:size];
+                [resultList addObject:nsValue];
+            }
+            else if ([p.stuctName isEqualToString:@"CGRect"]) // CGRect
+            {
+                CGRect rect = CGRectFromString(value);
+                NSValue *nsValue = [NSValue valueWithCGRect:rect];
+                [resultList addObject:nsValue];
+            }
+            else
+            {
+                // 默认为空
+            }
+        }
+        else // 其他
+        {
+            [resultList addObject:value];
+        }
+    }
+    
+    return resultList;
+}
 
 /**
  *  不暴露方法: 根据传入的sql语句从数据库中查询相应数据并在得到数据后转化为模型时做初始化用
