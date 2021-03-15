@@ -8,205 +8,216 @@
 
 #import "ViewController.h"
 #import "Person.h"
+#import "SYTestModel.h"
 @interface ViewController ()
+@property (nonatomic, strong) UITextView *text;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
+static int count = 10;
 @implementation ViewController
+
+- (void)test
+{
+    [self insert];
+    [self updateSelf];
+    [self selectAll];
+    [self delete];
+}
+
+- (void)insert
+{
+    E *e = [[E alloc] init];
+    e.numberValue = @(1);
+    e.dateValue = [NSDate date];
+    e.dataValue = UIImagePNGRepresentation([UIImage imageNamed:@"8E7D412BF9A31BB59D6F6C7E92360220"]);
+    
+    D *d = [D new];
+    d.e = e;
+    d.dArray = @[e, e];
+    d.dDictionary = @{@"key1":e, @"key2":e};
+    d.cgrectValue = CGRectMake(1, 1, 1, 1);
+    d.cgsizeValue = d.cgrectValue.size;
+    d.cgpointValue = d.cgrectValue.origin;
+    
+    C *c = [C new];
+    c.d = d;
+    c.cArray = @[d, d];
+    c.cDictionary = @{@"key1":d, @"key2":d};
+    c.cgfloatValue = 1;
+    c.floatValue = 1;
+    c.doubleValue = 1;
+    
+    
+    B *b = [B new];
+    b.c = c;
+    b.bArray = @[c, c];
+    b.bDictionary = @{@"key1":c, @"key2":c};
+    b.uintegerValue = 1;
+    b.longlongValue = 1;
+    b.int64_tValue = 1;
+    
+    A *a = [A new];
+    a.b = b;
+    a.aArray = @[b, b];
+    a.aDictionary = @{@"key1":b, @"key2":b};
+    a.intValue = 1;
+    a.integerValue = 1;
+    
+    [a __SY_Insert];
+}
+
+- (void)delete
+{
+//    BOOL result = [A __SY_DeleteWithCondition:nil];
+    NSArray *tmp = [A __SY_SelectAll];
+    for (A *a in tmp) {
+        [a __SY_Delete];
+    }
+//    NSLog(@"%d", result);
+}
+
+- (void)updateSelf
+{
+    int con = ++count;
+    
+    E *e = [[E alloc] init];
+    e.numberValue = @(con);
+    e.dateValue = [NSDate date];
+    e.dataValue = UIImagePNGRepresentation([UIImage imageNamed:@"8E7D412BF9A31BB59D6F6C7E92360220"]);
+    
+    D *d = [D new];
+    d.e = e;
+    d.dArray = @[e, e];
+    d.dDictionary = @{[NSString stringWithFormat:@"key%d", con]:e, [NSString stringWithFormat:@"KEY%d", con]:e};
+    d.cgrectValue = CGRectMake(con, con, con, con);
+    d.cgsizeValue = d.cgrectValue.size;
+    d.cgpointValue = d.cgrectValue.origin;
+    
+    C *c = [C new];
+    c.d = d;
+    c.cArray = @[d, d];
+    c.cDictionary = @{[NSString stringWithFormat:@"key%d", con]:d, [NSString stringWithFormat:@"KEY%d", con]:d};
+    c.cgfloatValue = con;
+    c.floatValue = con;
+    c.doubleValue = con;
+    
+    
+    B *b = [B new];
+    b.c = c;
+    b.bArray = @[c, c];
+    b.bDictionary = @{[NSString stringWithFormat:@"key%d", con]:c, [NSString stringWithFormat:@"KEY%d", con]:c};
+    b.uintegerValue = con;
+    b.longlongValue = con;
+    b.int64_tValue = con;
+    
+    A *a = [A new];
+    a.b = b;
+    a.aArray = @[b, b];
+    a.aDictionary = @{[NSString stringWithFormat:@"key%d", con]:b, [NSString stringWithFormat:@"KEY%d", con]:b};
+    a.intValue = con;
+    a.integerValue = con;
+    
+    NSArray *tmp = [A __SY_SelectAll];
+    for (A *model in tmp) {
+        model.b = a.b;
+        model.aArray = a.aArray;
+        model.aDictionary = a.aDictionary;
+        model.intValue = a.intValue;
+        model.integerValue = a.integerValue;
+        [model __SY_Update];
+    }
+}
+
+- (void)selectAll
+{
+    NSArray *tmp = [A __SY_SelectAll];
+    for (A *a in tmp)
+    {
+        NSDictionary *dic = a.aDictionary;
+        for (B *b in dic.allValues) {
+            NSDictionary *dic1 = b.bDictionary;
+            for (C *c in dic1.allValues) {
+                NSDictionary *dic2 = c.cDictionary;
+                for (D *d in dic2.allValues) {
+                    NSDictionary *dic3 = d.dDictionary;
+                    for (E *e in dic3.allValues) {
+                        self.imageView.image = [UIImage imageWithData:e.dataValue];
+                    }
+                }
+            }
+        }
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    [self test];
     
-//        [self add];
-//    [self remove];
-//        [self update];
-//        [self select];
+    UIButton *insert = [[UIButton alloc] initWithFrame:CGRectMake(30, 100, 50, 50)];
+    [insert setBackgroundColor:[UIColor redColor]];
+    [insert addTarget:self action:@selector(insertbtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [insert setTitle:@"插入" forState:UIControlStateNormal];
+    [insert setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [insert setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:insert];
     
-    BOOL result = [Third sy_UpdateName:@"dateValue" newValue:nil condition:@"" error:nil];
+    UIButton *delete = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(insert.frame) + 30, 100, 50, 50)];
+    [delete setBackgroundColor:[UIColor redColor]];
+    [delete addTarget:self action:@selector(deletebtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [delete setTitle:@"删除" forState:UIControlStateNormal];
+    [delete setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [delete setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:delete];
     
-    NSArray *array = [Third sy_FindName:@"dateValue" condition:@"" error:nil];
-    for (NSValue *value in array) {
-        NSLog(@"(1)%@", value);
-    }
+    UIButton *update = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(delete.frame) + 30, 100, 50, 50)];
+    [update setBackgroundColor:[UIColor redColor]];
+    [update addTarget:self action:@selector(updatebtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [update setTitle:@"更新" forState:UIControlStateNormal];
+    [update setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [update setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:update];
+    
+    UIButton *select = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(update.frame) + 30, 100, 50, 50)];
+    [select setBackgroundColor:[UIColor redColor]];
+    [select addTarget:self action:@selector(selectbtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [select setTitle:@"查询" forState:UIControlStateNormal];
+    [select setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [select setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:select];
+    
+    UITextView *text = [[UITextView alloc] init];
+    text.frame = CGRectMake(insert.frame.origin.x, CGRectGetMaxY(update.frame) + 50, CGRectGetMaxX(select.frame) - insert.frame.origin.x, 400);
+    text.backgroundColor = [UIColor colorWithRed:244.0/255 green:244.0/255 blue:244.0/255 alpha:1.0];
+    [self.view addSubview:text];
+    self.text = text;
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(insert.frame.origin.x, CGRectGetMaxY(text.frame) + 50, text.frame.size.width, 300);
+    [self.view addSubview:imageView];
+    imageView.backgroundColor = [UIColor colorWithRed:244.0/255 green:244.0/255 blue:244.0/255 alpha:1.0];
+    self.imageView = imageView;
 }
 
-
-// 增
-- (void)add
+- (void)insertbtnClick
 {
-    Third *third = [[Third alloc] init];
-    third.intValue = 1;
-    third.integerValue = 1;
-    third.uintegerValue = 1;
-    third.longlongValue = 1;
-    third.int64_tValue = 1;
-    third.cgfloatValue = 1.1;
-    third.floatValue = 1.1;
-    third.doubleValue = 1.1;
-    
-    third.cgpointValue = CGPointMake(10, 10);
-    third.cgsizeValue = CGSizeMake(10, 10);
-    third.cgrectValue = CGRectMake(10, 10, 10, 10);
-    
-    third.stringValue = @"第三个字符串";
-    third.arrayValue = @[@"1", @"2", @"3"];
-    third.mutablearrayValue = @[@"11", @"22", @"33"].mutableCopy;
-    third.numberValue = @(1);
-    third.dateValue = [NSDate date];
-    third.dataValue = UIImagePNGRepresentation([UIImage imageNamed:@"8E7D412BF9A31BB59D6F6C7E92360220"]);
-    
-    third.thirdNest = nil;
-    third.thirdListNest = nil;
-    
-    
-    
-    Third *third1 = [[Third alloc] init];
-    third1.intValue = 2;
-    third1.integerValue = 2;
-    third1.uintegerValue = 2;
-    third1.longlongValue = 2;
-    third1.int64_tValue = 2;
-    third1.cgfloatValue = 2;
-    third1.floatValue = 2;
-    third1.doubleValue = 2;
-    
-    third1.cgpointValue = CGPointMake(102, 102);
-    third1.cgsizeValue = CGSizeMake(102, 102);
-    third1.cgrectValue = CGRectMake(102, 102, 102, 102);
-    
-    third1.stringValue = @"第三个字符串";
-    third1.arrayValue = @[@"1", @"2", @"3"];
-    third1.mutablearrayValue = @[@"11", @"22", @"33"].mutableCopy;
-    third1.numberValue = @(1 + 2);
-    third1.dateValue = [NSDate date];
-    third1.dataValue = [NSData data];
-    
-    third1.thirdNest = third;
-    third1.thirdListNest = @[third, third].mutableCopy;
-    
-    
-    Second *second = [[Second alloc] init];
-    second.intValue = 3;
-    second.integerValue = 3;
-    second.uintegerValue = 3;
-    second.longlongValue = 3;
-    second.int64_tValue = 3;
-    second.cgfloatValue = 3;
-    second.floatValue = 3;
-    second.doubleValue = 3;
-    
-    second.cgpointValue = CGPointMake(3, 3);
-    second.cgsizeValue = CGSizeMake(3, 3);
-    second.cgrectValue = CGRectMake(3, 3, 3, 3);
-    
-    second.stringValue = @"第二个字符串";
-    second.arrayValue = @[@"1", @"2", @"3"];
-    second.mutablearrayValue = @[@"11", @"22", @"33"].mutableCopy;
-    second.numberValue = @(3);
-    second.dateValue = [NSDate date];
-    second.dataValue = [NSData data];
-    
-    second.thirdNest = third1;
-    second.thirdListNest = @[third1, third, third1].mutableCopy;
-    
-    
-    First *first = [[First alloc] init];
-    first.intValue = 4;
-    first.integerValue = 4;
-    first.uintegerValue = 4;
-    first.longlongValue = 4;
-    first.int64_tValue = 4;
-    first.cgfloatValue = 4;
-    first.floatValue = 4;
-    first.doubleValue = 4;
-    
-    first.cgpointValue = CGPointMake(4, 4);
-    first.cgsizeValue = CGSizeMake(4, 4);
-    first.cgrectValue = CGRectMake(4, 4, 4, 4);
-    
-    first.stringValue = @"第一个字符串";
-    first.arrayValue = @[@"1", @"2", @"3"];
-    first.mutablearrayValue = @[@"11", @"22", @"33"].mutableCopy;
-    first.numberValue = @(4);
-    first.dateValue = [NSDate date];
-    first.dataValue = UIImagePNGRepresentation([UIImage imageNamed:@"myIcon"]);
-    
-    first.secondNest = second;
-    first.secondListNest = @[second, second].mutableCopy;
-    
-    NSError *error = nil;
-    BOOL result = [first sy_InsertWithError:&error];
-    
-    NSArray *arr = [First sy_FindAllWithError:&error];
-    NSLog(@"%@ -- %d", arr, result);
+    [self insert];
 }
 
-// 删
-- (void)remove
+- (void)deletebtnClick
 {
-    NSError *error = nil;
-    BOOL result = [First sy_RemoveByCondition:@"" andError:&error];
-    NSLog(@"%d", result);
+    [self delete];
 }
 
-// 改
-- (void)update
+- (void)updatebtnClick
 {
-    Second *second = [[Second alloc] init];
-    second.intValue = 3;
-    second.integerValue = 3;
-    second.uintegerValue = 3;
-    second.longlongValue = 3;
-    second.int64_tValue = 3;
-    second.cgfloatValue = 3;
-    second.floatValue = 3;
-    second.doubleValue = 3;
-    
-    second.cgpointValue = CGPointMake(11.33, 333.223);
-    second.cgsizeValue = CGSizeMake(333.13, 33.134);
-    second.cgrectValue = CGRectMake(3.78, 3.53, 3.23, 3.44);
-    
-    second.stringValue = @"第二个字符串";
-    second.arrayValue = @[@"1", @"2", @"3"];
-    second.mutablearrayValue = @[@"11", @"22", @"33"].mutableCopy;
-    second.numberValue = @(3);
-    second.dateValue = [NSDate date];
-    second.dataValue = UIImagePNGRepresentation([UIImage imageNamed:@"myIcon"]);
-    
-    second.thirdNest = nil;
-    second.thirdListNest = nil;
-    
-    
-    
-    NSError *error = nil;
-    NSArray *arr = [First sy_FindAllWithError:&error];
-    for (First *first in arr) {
-        first.stringValue = @"谷胜亚";
-        first.secondNest = second;
-        first.secondListNest = nil;
-        BOOL result = [first sy_UpdateWithError:&error];
-        NSLog(@"%d", result);
-    }
-    NSLog(@"%@", arr);
+    [self updateSelf];
 }
 
-// 查
-- (void)select
+- (void)selectbtnClick
 {
-    NSError *error = nil;
-    
-    
-    NSArray *arr = [First sy_FindAllWithError:&error];
-    for (First *first in arr) {
-        NSData *data = first.dataValue;
-        UIImageView *img = [[UIImageView alloc] init];
-        UIImage *image = [UIImage imageWithData:data];
-        img.image = image;
-        img.frame = CGRectMake(50, 50, image.size.width, image.size.height);
-        [self.view addSubview:img];
-    }
-    NSLog(@"%@", arr);
+    [self selectAll];
 }
-
 
 @end

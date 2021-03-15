@@ -3,25 +3,29 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		543320FC25C1C1DB00B9D0E6 /* SYBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 543320FB25C1C1DB00B9D0E6 /* SYBaseModel.m */; };
 		5437B3AF20F6F89E00952CDD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3AE20F6F89E00952CDD /* AppDelegate.m */; };
 		5437B3B220F6F89E00952CDD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3B120F6F89E00952CDD /* ViewController.m */; };
 		5437B3B520F6F89E00952CDD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5437B3B320F6F89E00952CDD /* Main.storyboard */; };
 		5437B3B720F6F89F00952CDD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5437B3B620F6F89F00952CDD /* Assets.xcassets */; };
 		5437B3BA20F6F89F00952CDD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5437B3B820F6F89F00952CDD /* LaunchScreen.storyboard */; };
 		5437B3BD20F6F89F00952CDD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3BC20F6F89F00952CDD /* main.m */; };
-		5437B3CA20F6F8CB00952CDD /* SY_Property.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C420F6F8CA00952CDD /* SY_Property.m */; };
+		5437B3CA20F6F8CB00952CDD /* SYPropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C420F6F8CA00952CDD /* SYPropertyInfo.m */; };
 		5437B3CB20F6F8CB00952CDD /* SY_FMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C520F6F8CA00952CDD /* SY_FMDBManager.m */; };
 		5437B3CC20F6F8CB00952CDD /* NSObject+SY_FMDBExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 5437B3C620F6F8CA00952CDD /* NSObject+SY_FMDBExtension.m */; };
 		544B4D0720FD9DF10071FC1E /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 544B4D0620FD9DF10071FC1E /* Person.m */; };
+		54C9087525C7945800FEF5A5 /* SYTestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C9087425C7945800FEF5A5 /* SYTestModel.m */; };
 		D1A0058A52AD43DF9D80F693 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D25F521BDF2ED445C97D7AA /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1D25F521BDF2ED445C97D7AA /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		543320FA25C1C1DB00B9D0E6 /* SYBaseModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYBaseModel.h; sourceTree = "<group>"; };
+		543320FB25C1C1DB00B9D0E6 /* SYBaseModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYBaseModel.m; sourceTree = "<group>"; };
 		5437B3AA20F6F89E00952CDD /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5437B3AD20F6F89E00952CDD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5437B3AE20F6F89E00952CDD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -32,15 +36,18 @@
 		5437B3B920F6F89F00952CDD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5437B3BB20F6F89F00952CDD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5437B3BC20F6F89F00952CDD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		5437B3C420F6F8CA00952CDD /* SY_Property.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SY_Property.m; sourceTree = "<group>"; };
+		5437B3C420F6F8CA00952CDD /* SYPropertyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYPropertyInfo.m; sourceTree = "<group>"; };
 		5437B3C520F6F8CA00952CDD /* SY_FMDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SY_FMDBManager.m; sourceTree = "<group>"; };
 		5437B3C620F6F8CA00952CDD /* NSObject+SY_FMDBExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SY_FMDBExtension.m"; sourceTree = "<group>"; };
-		5437B3C720F6F8CA00952CDD /* SY_Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SY_Property.h; sourceTree = "<group>"; };
+		5437B3C720F6F8CA00952CDD /* SYPropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYPropertyInfo.h; sourceTree = "<group>"; };
 		5437B3C820F6F8CA00952CDD /* NSObject+SY_FMDBExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SY_FMDBExtension.h"; sourceTree = "<group>"; };
 		5437B3C920F6F8CA00952CDD /* SY_FMDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SY_FMDBManager.h; sourceTree = "<group>"; };
 		544B4D0520FD9DF10071FC1E /* Person.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		544B4D0620FD9DF10071FC1E /* Person.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		544B4D0820FDC1920071FC1E /* SY_Error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SY_Error.h; sourceTree = "<group>"; };
+		54C9087325C7945800FEF5A5 /* SYTestModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTestModel.h; sourceTree = "<group>"; };
+		54C9087425C7945800FEF5A5 /* SYTestModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTestModel.m; sourceTree = "<group>"; };
+		54C9087725C8E32200FEF5A5 /* SYDefineFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDefineFile.h; sourceTree = "<group>"; };
 		7A7A4203E176811214ED7C21 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		EBC17E997865C7115FB28A20 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,6 +90,8 @@
 				5437B3AE20F6F89E00952CDD /* AppDelegate.m */,
 				5437B3B020F6F89E00952CDD /* ViewController.h */,
 				5437B3B120F6F89E00952CDD /* ViewController.m */,
+				54C9087325C7945800FEF5A5 /* SYTestModel.h */,
+				54C9087425C7945800FEF5A5 /* SYTestModel.m */,
 				544B4D0520FD9DF10071FC1E /* Person.h */,
 				544B4D0620FD9DF10071FC1E /* Person.m */,
 				5437B3B320F6F89E00952CDD /* Main.storyboard */,
@@ -101,8 +110,11 @@
 				5437B3C620F6F8CA00952CDD /* NSObject+SY_FMDBExtension.m */,
 				5437B3C920F6F8CA00952CDD /* SY_FMDBManager.h */,
 				5437B3C520F6F8CA00952CDD /* SY_FMDBManager.m */,
-				5437B3C720F6F8CA00952CDD /* SY_Property.h */,
-				5437B3C420F6F8CA00952CDD /* SY_Property.m */,
+				5437B3C720F6F8CA00952CDD /* SYPropertyInfo.h */,
+				5437B3C420F6F8CA00952CDD /* SYPropertyInfo.m */,
+				543320FA25C1C1DB00B9D0E6 /* SYBaseModel.h */,
+				543320FB25C1C1DB00B9D0E6 /* SYBaseModel.m */,
+				54C9087725C8E32200FEF5A5 /* SYDefineFile.h */,
 				544B4D0820FDC1920071FC1E /* SY_Error.h */,
 			);
 			name = SYFMDBModel;
@@ -199,17 +211,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		629D82DCEC3522382D904CEB /* [CP] Check Pods Manifest.lock */ = {
@@ -238,12 +249,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				5437B3CC20F6F8CB00952CDD /* NSObject+SY_FMDBExtension.m in Sources */,
-				5437B3CA20F6F8CB00952CDD /* SY_Property.m in Sources */,
+				5437B3CA20F6F8CB00952CDD /* SYPropertyInfo.m in Sources */,
 				544B4D0720FD9DF10071FC1E /* Person.m in Sources */,
 				5437B3B220F6F89E00952CDD /* ViewController.m in Sources */,
 				5437B3BD20F6F89F00952CDD /* main.m in Sources */,
 				5437B3AF20F6F89E00952CDD /* AppDelegate.m in Sources */,
 				5437B3CB20F6F8CB00952CDD /* SY_FMDBManager.m in Sources */,
+				54C9087525C7945800FEF5A5 /* SYTestModel.m in Sources */,
+				543320FC25C1C1DB00B9D0E6 /* SYBaseModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

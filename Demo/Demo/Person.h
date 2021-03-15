@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NSObject+SY_FMDBExtension.h"
 #import <UIKit/UIKit.h>
+#import "NSObject+SY_FMDBExtension.h"
 @interface Third : NSObject
 
 #pragma mark- <-----------  基础数据类型  ----------->
@@ -48,7 +48,7 @@
 
 #pragma mark- <-----------  OC类型  ----------->
 // NSString类型
-@property (nonatomic, copy) NSString<SY_SAVE> *stringValue;
+@property (nonatomic, copy) NSString *stringValue;
 
 // NSArray类型
 @property (nonatomic, copy) NSArray *arrayValue;
@@ -177,8 +177,11 @@
 @property (nonatomic, assign) CGRect cgrectValue; // 未保存,默认为zero
 
 #pragma mark- <-----------  OC类型  ----------->
+
 // NSString类型
-@property (nonatomic, copy) NSString *stringValue;
+@property (nonatomic, copy) NSString<NSObject> *stringValue;
+
+@property (nonatomic, strong) id idvalue;
 
 // NSArray类型
 @property (nonatomic, copy) NSArray *arrayValue;

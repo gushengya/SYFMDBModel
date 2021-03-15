@@ -7,11 +7,50 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SYDefineFile.h"
 
-@protocol SY_SAVE
+#pragma mark- 公用方法
+@interface NSObject (SYPublic)
+
+/// 移除不能被序列化的部分
+- (id)__SY_RemoveCannotSerializationPart;
+
 @end
 
-@interface NSObject (SY_FMDBExtension) <SY_SAVE>
+#pragma mark- NSObject自有变量的扩展
+@interface NSObject (SYPropertyInfo)
+
+/// 当前类以及向上集成树上的所有属性信息字典
++ (NSDictionary *)__SY_AllPropertyInfo;
+
+/// 配置属性信息
++ (void)__SY_ConfigPropertyInfos;
+
+@end
+
+@interface NSObject (SQLiteCache)<SYClassCache>
+
+///// 嵌套属性映射(如有嵌套属性, 需重写该方法返回key为字段名、value为Class)
+//+ (NSDictionary *)__SY_NestClassMap;
+
+/// 当前类以及向上继承树上的嵌套属性信息字典
++ (NSDictionary *)__SY_NestPropertyInfo;
+
+/// 当前类以及向上继承树上的可存储属性信息字典
++ (NSDictionary *)__SY_CacheEnablePropertyInfo;
+
+/// 判断该属性是否计划存储
++ (BOOL)__SY_CacheEnableOfPropertyName:(SEL)selector;
+
+/// 数据库方面配置属性信息(在原有的属性信息基础上单独配置数据库方面)
++ (void)__SY_DataBaseConfigProperties;
+
+/// 配置SQLite存储表的信息
+//+ (void)__SY_ConfigSQLiteTable;
+
+@end
+
+@interface NSObject (SY_FMDBExtension) 
 
 #pragma mark- <-----------  数据库操作  ----------->
 // FIXME: 新增
@@ -97,7 +136,6 @@
  */
 - (BOOL)sy_RemoveWithError:(NSError *__autoreleasing*)error;
 
-
 #pragma mark- <-----------  可由类重写的方法  ----------->
 /// 保存的属性名
 + (BOOL)sy_savedPropertyName:(NSString *)name;
@@ -107,5 +145,5 @@
 
 /// 类中属性名与表中字段名的映射
 + (NSDictionary<NSString*, NSString*> *)sy_propertyColumnMapList;
-
+- (NSString *)valuelog;
 @end
